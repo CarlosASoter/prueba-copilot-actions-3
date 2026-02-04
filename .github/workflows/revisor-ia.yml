@@ -29,7 +29,7 @@ jobs:
           import os
           import subprocess
           import requests
-          from openai import OpenAI
+          from openai import OpenAI, error
 
           client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
@@ -45,16 +45,20 @@ jobs:
               print("Sin cambios para analizar.")
               exit(0)
 
+          # Truncar diff para ahorrar tokens
+          MAX_DIFF_CHARS = 4000
+          diff = diff[:MAX_DIFF_CHARS]
+
           prompt = f"Eres un experto en seguridad. Analiza este diff y reporta fallos graves en español:\n\n{diff}"
 
           try:
               response = client.chat.completions.create(
                   model="gpt-3.5-turbo",
                   messages=[
-                      {"role":"system","content":"Eres un experto en seguridad."},
-                      {"role":"user","content":prompt}
+                      {"role": "system", "content": "Eres un experto en seguridad."},
+                      {"role": "user", "content": prompt}
                   ],
-                  max_tokens=500
+                  max_tokens=250  # limitar tokens de salida
               )
               feedback = response.choices[0].message.content
 
@@ -75,6 +79,8 @@ jobs:
               else:
                   print(f"❌ Error GitHub: {res.status_code} - {res.text}")
 
+          except error.RateLimitError:
+              print("❌ No hay cuota suficiente en OpenAI para este mes. Se omite la auditoría.")
           except Exception as e:
-              print(f"❌ ERROR: {e}")
+              print(f"❌ ERROR inesperado: {e}")
           EOF
