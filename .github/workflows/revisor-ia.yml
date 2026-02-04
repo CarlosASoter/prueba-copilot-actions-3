@@ -1,4 +1,4 @@
-name: Revisor IA de Seguridad
+name: Revisor IA de Seguridad 
 
 on:
   pull_request:
