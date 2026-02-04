@@ -58,4 +58,10 @@ jobs:
               res = requests.post(url, json={"body": f"### 🛡️ Auditoría OpenAI\n\n{feedback}"}, headers=headers)
 
               if res.status_code == 201:
-                  print("✅ Comentari
+                  print("✅ Comentario publicado.")
+              else:
+                  print(f"❌ Error GitHub: {res.status_code} - {res.text}")
+
+          except Exception as e:
+              print(f"❌ ERROR: {e}")
+          EOF
