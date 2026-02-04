@@ -6,7 +6,19 @@ on:
 jobs:
   revision-seguridad:
     runs-on: ubuntu-latest
+
     steps:
+      # Paso 1: Hacer checkout del código
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Paso 2: Instalar dependencias
+      - name: Instalar dependencias Python
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade openai requests
+
+      # Paso 3: Revisión de seguridad con OpenAI
       - name: Revisión de Seguridad
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
