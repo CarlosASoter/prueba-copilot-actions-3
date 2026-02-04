@@ -1,4 +1,4 @@
-name: Revisor IA
+name: Revisor-IA
 
 on:
   pull_request:
